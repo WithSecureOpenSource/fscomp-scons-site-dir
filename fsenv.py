@@ -24,7 +24,7 @@ def _pkg_config_path(env):
     return os.path.join(env["PREFIX"], "lib", "pkgconfig")
 
 def _add_config_parser(env):
-    if "PREFIX" in env and "PKG_CONFIG_LIBS" in env:
+    if "PKG_CONFIG_LIBS" in env:
         env["CONFIG_PARSER"] = " ".join([
             "PKG_CONFIG_PATH=" + _pkg_config_path(env),
             "pkg-config",
@@ -36,28 +36,27 @@ def _add_config_parser(env):
         env["CONFIG_PARSER"] = ""
 
 def _add_lib_config_installer(env):
-    if "NAME" in env and "PREFIX" in env:
-        def install_lib_config():
-            name = env["NAME"]
-            pkgconfig = env.Substfile(
-                "lib/pkgconfig/" + name + ".pc",
-                "#" + name + ".pc.in",
-                SUBST_DICT={
-                    "@prefix@": env["PREFIX"],
-                    "@libs_private@": " ".join(
-                        ["-L{}".format(path)
-                         for path in env.get("TARGET_LIBPATH", []) +
-                        ["-l{}".format(lib)
-                         for lib in env.get("TARGET_LIBS", [])]]
-                    ),
-                },
-            )
-            env.Alias(
-                "install",
-                env.Install(_pkg_config_path(env), pkgconfig),
-            )
-        env.FSEnvInstallLibConfig = install_lib_config
-        env.FSEnvInstallCommonLibConfig = install_lib_config
+    def install_lib_config():
+        name = env["NAME"]
+        pkgconfig = env.Substfile(
+            "lib/pkgconfig/" + name + ".pc",
+            "#" + name + ".pc.in",
+            SUBST_DICT={
+                "@prefix@": env["PREFIX"],
+                "@libs_private@": " ".join(
+                    ["-L{}".format(path)
+                     for path in env.get("TARGET_LIBPATH", []) +
+                    ["-l{}".format(lib)
+                     for lib in env.get("TARGET_LIBS", [])]]
+                ),
+            },
+        )
+        env.Alias(
+            "install",
+            env.Install(_pkg_config_path(env), pkgconfig),
+        )
+    env.FSEnvInstallLibConfig = install_lib_config
+    env.FSEnvInstallCommonLibConfig = install_lib_config
 
 def consider_environment_variables(env):
     _override(env, "AR", "FSAR")

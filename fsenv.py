@@ -94,6 +94,7 @@ _arch_map = {
     ("FreeBSD", "amd64"): "freebsd_amd64",
     ("Linux", "i686"): "linux32",
     ("Linux", "x86_64"): "linux64",
+    ("Linux", "aarch64"): "linux_arm64",
     ("OpenBSD", "amd64"): "openbsd_amd64",
 }
 

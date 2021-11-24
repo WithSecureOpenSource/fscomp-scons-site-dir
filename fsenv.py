@@ -87,8 +87,8 @@ def _get_arch_envvar(env, envvar):
         os.getenv(envvar, None))
 
 def _add_fstracecheck(env):
-    env["FSTRACECHECK"] = os.path.join(env["PREFIX"], "bin", "stracecheck")
-    env["FSTRACECHECK2"] = os.path.join(env["PREFIX"], "bin", "stracecheck2")
+    env["FSTRACECHECK"] = os.path.join(env["PREFIX"], "bin", "fstracecheck")
+    env["FSTRACECHECK2"] = os.path.join(env["PREFIX"], "bin", "fstracecheck2")
 
 _arch_map = {
     ("Darwin", "arm64"): "darwin",

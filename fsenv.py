@@ -45,9 +45,11 @@ def _add_lib_config_installer(env):
                 "@prefix@": env["PREFIX"],
                 "@libs_private@": " ".join(
                     ["-L{}".format(path)
-                     for path in env.get("TARGET_LIBPATH", []) +
+                     for path in env.get("TARGET_LIBPATH", [])] +
                     ["-l{}".format(lib)
-                     for lib in env.get("TARGET_LIBS", [])]]
+                     for lib in env.get("TARGET_LIBS", [])] +
+                    ["-Wl,-framework,{}".format(framework)
+                     for framework in env.get("TARGET_FRAMEWORKS", [])]
                 ),
             },
         )

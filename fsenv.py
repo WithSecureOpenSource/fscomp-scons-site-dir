@@ -66,6 +66,7 @@ def consider_environment_variables(env):
     _override(env, "CXX", "FSCXX")
     _override(env, "RANLIB", "FSRANLIB")
     _append(env, "CCFLAGS", "FSCCFLAGS")
+    _append(env, "CXXFLAGS", "FSCXXFLAGS")
     _append(env, "LINKFLAGS", "FSLINKFLAGS")
 
 def _override(env, param, envvar):

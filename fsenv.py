@@ -26,7 +26,6 @@ def _pkg_config_path(env):
 def _add_config_parser(env):
     if "PKG_CONFIG_LIBS" in env:
         env["CONFIG_PARSER"] = " ".join([
-            "PKG_CONFIG_PATH=" + _pkg_config_path(env),
             "pkg-config",
             "--static",
             "--cflags",
@@ -60,6 +59,12 @@ def _add_lib_config_installer(env):
     env.FSEnvInstallLibConfig = install_lib_config
     env.FSEnvInstallCommonLibConfig = install_lib_config
 
+def _set_pkg_config_path(env):
+    value = _get_arch_envvar(env, "FSPKG_CONFIG_PATH")
+    if not value:
+        value = _pkg_config_path(env)
+    env["ENV"]["PKG_CONFIG_PATH"] = value
+
 def consider_environment_variables(env):
     _override(env, "AR", "FSAR")
     _override(env, "CC", "FSCC")
@@ -68,6 +73,7 @@ def consider_environment_variables(env):
     _append(env, "CCFLAGS", "FSCCFLAGS")
     _append(env, "CXXFLAGS", "FSCXXFLAGS")
     _append(env, "LINKFLAGS", "FSLINKFLAGS")
+    _set_pkg_config_path(env)
 
 def _override(env, param, envvar):
     value = _get_arch_envvar(env, envvar)

@@ -65,6 +65,11 @@ def _set_pkg_config_path(env):
         value = _pkg_config_path(env)
     env["ENV"]["PKG_CONFIG_PATH"] = value
 
+def _append_macos_paths(env):
+    if env["ARCH"] == "darwin":
+        env.AppendENVPath("PATH", "/opt/local/bin")
+        env.AppendENVPath("PATH", "/opt/homebrew/bin")
+
 def consider_environment_variables(env):
     _override(env, "AR", "FSAR")
     _override(env, "CC", "FSCC")
@@ -74,6 +79,7 @@ def consider_environment_variables(env):
     _append(env, "CXXFLAGS", "FSCXXFLAGS")
     _append(env, "LINKFLAGS", "FSLINKFLAGS")
     _set_pkg_config_path(env)
+    _append_macos_paths(env)
 
 def _override(env, param, envvar):
     value = _get_arch_envvar(env, envvar)

@@ -75,6 +75,12 @@ def consider_environment_variables(env):
     _override(env, "CC", "FSCC")
     _override(env, "CXX", "FSCXX")
     _override(env, "RANLIB", "FSRANLIB")
+    _override(env, "CCTOOLFLAGS", "FSCCTOOLFLAGS")
+    _override(env, "CXXTOOLFLAGS", "FSCXXTOOLFLAGS")
+    _override(env, "LINKTOOLFLAGS", "FSLINKTOOLFLAGS")
+    _combine(env, "CCTOOLFLAGS", "CCFLAGS")
+    _combine(env, "CXXTOOLFLAGS", "CXXFLAGS")
+    _combine(env, "LINKTOOLFLAGS", "LINKFLAGS")
     _append(env, "CCFLAGS", "FSCCFLAGS")
     _append(env, "CXXFLAGS", "FSCXXFLAGS")
     _append(env, "LINKFLAGS", "FSLINKFLAGS")
@@ -85,6 +91,13 @@ def _override(env, param, envvar):
     value = _get_arch_envvar(env, envvar)
     if value:                   # empty counts as None
         env[param] = value
+
+def _combine(env, param1, param2):
+    if param1 in env:
+        if param2 in env:
+            env[param2] = "{} {}".format(env[param1], env[param2])
+        else:
+            env[param2] = env[param1]
 
 def _append(env, param, envvar):
     value = _get_arch_envvar(env, envvar)
